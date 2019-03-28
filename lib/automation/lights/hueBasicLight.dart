@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:automationCorePrototype/automation/lights/hueBasicLightState.dart';
 import 'package:automationCorePrototype/automation/types/lights.dart';
 import 'package:automationCorePrototype/automation/types/mqttAdapter.dart';
@@ -9,10 +11,10 @@ class HueBasicLight implements BasicLight, DimmingFadeLight, DimmingLight {
   MQTTAdapter adapter;
 
   int brightnessPercent;
-  int transitionTime;
+  int transitionTime; // 100ms increments (value should be 4 for 400ms)
 
-  HueBasicLight(String identifier, MQTTAdapter adapter) {
-    this.identifier = identifier;
+  HueBasicLight(String hueLightId, MQTTAdapter adapter) {
+    this.identifier = hueLightId;
     this.adapter = adapter;
   }
 
@@ -21,24 +23,26 @@ class HueBasicLight implements BasicLight, DimmingFadeLight, DimmingLight {
     state.on = this.brightnessPercent > 0;
     state.brightness = this.brightnessPercent;
     state.transitionTime = this.transitionTime;
-
-    var data = state.toJson();
-    return data.toString();
+    return json.encode(state.toJson());
   }
 
   void dispatchUpdate() {
     var updateMessage = buildStatePayload();
-    this.adapter.sendPayload(new SourceIdentifier("HUE_LIGHT", this.identifier), updateMessage);
+    // TODO: Revisit -- this looks wrong
+    this.adapter.sendPayload(new SourceToken("hue_light", this.identifier), updateMessage);
   }
 
   @override
   void setBrightness(int percent) {
-    // TODO: implement setBrightness
+    this.brightnessPercent = percent;
+    this.dispatchUpdate();
   }
 
   @override
   void setBrightnessWithFade(int percent, int fadeMilliseconds) {
-    // TODO: implement setBrightnessWithFade
+    this.brightnessPercent = percent;
+    this.transitionTime = (fadeMilliseconds/100).round();
+    this.dispatchUpdate();
   }
 
   @override

@@ -4,7 +4,7 @@ part 'hueBasicLightState.g.dart';
 
 @JsonSerializable(nullable: false)
 
-class HueBasicLightState{
+class HueBasicLightState {
   @JsonKey(name: 'on', nullable: false)
   bool on; // on
 

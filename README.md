@@ -1,4 +1,7 @@
-A sample command-line application.
+# automationCorePrototype
+---
+A hacked-together project for controlling various different home automation devices using MQTT.
 
-Created from templates made available by Stagehand under a BSD-style
-[license](https://github.com/dart-lang/stagehand/blob/master/LICENSE).
+Some (all?) of the messages are in a non-standard format that's dependent on other adapters/servers.
+
+Thanks for letting me put my garbage on the internet -- I was running out of disk space.

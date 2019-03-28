@@ -8,8 +8,11 @@ class MQTTAdapter {
     this.provider = provider;
   }
 
-  bool sendPayload(SourceIdentifier sourceID, String payload) {
-    print("Totally sending \"$payload\" via ${sourceID.sourceType}/${sourceID.sourceIdentifier}");
+  bool sendPayload(SourceToken token, String payload) {
+    var deviceType = token.majorIdentifier;
+    var deviceID = token.minorIdentifier;
+    this.provider.publishMessage(deviceType, deviceID, payload);
+    print("Totally sending \"$payload\" via $deviceType/$deviceID");
     return false;
   }
 }

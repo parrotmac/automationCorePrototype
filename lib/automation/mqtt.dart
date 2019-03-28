@@ -1,7 +1,9 @@
+import 'package:automationCorePrototype/automation/core.dart';
+import 'package:automationCorePrototype/automation/lights/hueBasicLightState.dart';
 import 'package:automationCorePrototype/automation/types/source.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 
-typedef void SubscriptionHandler(SourceIdentifier sourceID, String payload);
+typedef void SubscriptionHandler(String sourceMajor, String sourceMinor, String eventPayload);
 
 class MQTTProvider {
   MqttClient client;
@@ -31,9 +33,9 @@ class MQTTProvider {
 
       var originalTopic = c[0].topic;
       var topicParts = originalTopic.split("/");
-      String sourceType = topicParts[1];
-      String sourceID = topicParts[2];
-      this.subscriptionHandler(new SourceIdentifier(sourceType, sourceID), pt);
+      String sourceMajor = topicParts[1];
+      String sourceMinor = topicParts[2];
+      this.subscriptionHandler(sourceMajor, sourceMinor, pt);
     });
 
   }
